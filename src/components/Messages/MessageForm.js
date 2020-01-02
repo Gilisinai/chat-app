@@ -8,6 +8,7 @@ import ProgressBar from './ProgressBar';
 class MessageForm extends Component {
     state = {
         storageRef: firebase.storage().ref(),
+        typingRef: firebase.database().ref('typing'),
         uploadState: '',
         precentUploaded: 0,
         uploadTask: null,
@@ -28,6 +29,22 @@ class MessageForm extends Component {
         this.setState({ [event.target.name]: event.target.value })
     }
 
+    handleKeyDown = () => {
+        const { message, typingRef, channel, user } = this.state
+
+        if (message) {
+            typingRef
+                .child(channel.id)
+                .child(user.uid)
+                .set(user.displayName)
+        } else {
+            typingRef
+                .child(channel.id)
+                .child(user.uid)
+                .remove()
+        }
+    }
+
     createMessage = (fileUrl = null) => {
         const message = {
             timestamp: firebase.database.ServerValue.TIMESTAMP,
@@ -36,9 +53,9 @@ class MessageForm extends Component {
                 name: this.state.user.displayName,
                 avatar: this.state.user.photoURL
             },
-            
+
         }
-        if(fileUrl !== null){
+        if (fileUrl !== null) {
             message['image'] = fileUrl
         } else {
             message['content'] = this.state.message
@@ -48,7 +65,7 @@ class MessageForm extends Component {
 
     sendMessage = () => {
         const { getMessagesRef } = this.props
-        const { message, channel } = this.state
+        const { message, channel,user, typingRef } = this.state
 
         if (message) {
             this.setState({ loading: true })
@@ -59,6 +76,10 @@ class MessageForm extends Component {
                 .set(this.createMessage())
                 .then(() => {
                     this.setState({ loading: false, message: '', errors: [] })
+                    typingRef
+                        .child(channel.id)
+                        .child(user.uid)
+                        .remove()
                 })
                 .catch(err => {
                     console.error(err)
@@ -75,7 +96,7 @@ class MessageForm extends Component {
     }
 
     getPath = () => {
-        if(this.props.isPrivateChannel) {
+        if (this.props.isPrivateChannel) {
             return `chat/private-${this.state.channel.id}`
         } else {
             return 'chat/public'
@@ -122,27 +143,28 @@ class MessageForm extends Component {
 
     sendFileMessage = (fileUrl, ref, pathToUpload) => {
         ref.child(pathToUpload)
-        .push()
-        .set(this.createMessage(fileUrl))
-        .then(() => {
-            this.setState({ uploadState: 'done'})
-        })
-        .catch(err => {
-            console.error(err)
-            this.setState({
-                errors: this.state.errors.concat(err)
+            .push()
+            .set(this.createMessage(fileUrl))
+            .then(() => {
+                this.setState({ uploadState: 'done' })
             })
-        })
+            .catch(err => {
+                console.error(err)
+                this.setState({
+                    errors: this.state.errors.concat(err)
+                })
+            })
     }
 
     render() {
-        const { errors, message, loading, modal , uploadState, precentUploaded} = this.state
+        const { errors, message, loading, modal, uploadState, precentUploaded } = this.state
         return (
             <Segment className="message__form">
                 <Input
                     fluid
                     name="message"
                     onChange={this.handleChange}
+                    onKeyDown={this.handleKeyDown}
                     value={message}
                     style={{ marginBottom: '0.7em' }}
                     label={<Button icon={'add'} />}
@@ -170,15 +192,15 @@ class MessageForm extends Component {
                         icon="cloud upload"
                     />
                 </Button.Group>
-                    <FileModal
-                        uploadFile={this.uploadFile}
-                        modal={modal}
-                        closeModal={this.closeModal}
-                    />
-                    <ProgressBar
+                <FileModal
+                    uploadFile={this.uploadFile}
+                    modal={modal}
+                    closeModal={this.closeModal}
+                />
+                <ProgressBar
                     uploadState={uploadState}
                     precentUploaded={precentUploaded}
-                    />
+                />
             </Segment>
         );
     }
