@@ -1,3 +1,10 @@
+# Gili-Chat
+
+Gili-Chat is a full-stack chat app built with React. Users are able to send messages or images on public/private channels. Able to choose and edit their profile pictures and theme colors of the app.
+
+Demo: https://gili-chat.firebaseapp.com/
+
+
 # Table Of Contents
 
 - [Gili-Chat](#gili-chat)
@@ -11,14 +18,6 @@
     - [Change App Colors](#change-app-colors)
   - [Techstack](#tech-stack)
   - [TODO](#todo)
-
-# Gili-Chat
-
-Gili-Chat is a full-stack chat app built with React. Users are able to send messages or images on public/private channels. Able to choose and edit their profile pictures and theme colors of the app.
-
-Demo: https://gili-chat.firebaseapp.com/
-
-## Table Of Contents
 
 
 ## Running the project
@@ -38,7 +37,8 @@ Main screen for users to login or register if they are not a users already.
 
 ### Main Dashboard
 
-A user can see whos currently conncted, have a chat area and a side metadata panel about the current channel.
+A user can see whos currently connected, have a chat area and a side metadata panel about the current channel.
+A channel can be marked as star and be a favorite for a current user.
 
 <p align="center"><img src="assets/chat-app-home.PNG" width="600" /></p>
 
@@ -46,7 +46,7 @@ A user can see whos currently conncted, have a chat area and a side metadata pan
 
 A user can send regular text messages or images,send emojis and search for messages that was already sent.  
 
-<p align="center"><img src="assets/chat-app-messages.PNG" width="600" /></p>
+<p align="center"><img src="assets/chat-app-messages.PNG" width="700" /></p>
 
 ### About 
 
@@ -58,7 +58,7 @@ Once a user on a public channel he cam see details about the channels, general i
 
 A user can change his default avatar image , corp the image if needed and save it as its profile picture.
 
-<p align="center"><img src="assets/chat-app-change-avatar.PNG.PNG" width="600" /></p>
+<p align="center"><img src="assets/chat-app-change-avatar.PNG" width="600" /></p>
 
 ### Change App Colors
 
